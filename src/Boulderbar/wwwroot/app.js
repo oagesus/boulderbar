@@ -10,6 +10,7 @@
   var DAY_MIN = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
   var BUCKETS = { day: 900, week: 1800, month: 3600 };
   var ENFORCE_DATA_RANGE = true;
+  var CHECK_OFFSET_MS = 15000;
 
   var el = {
     updated: document.getElementById("updated"),
@@ -131,7 +132,7 @@
   }
 
   function loadStatus() {
-    json("/healthz").then(function (health) {
+    return json("/healthz").then(function (health) {
       if (!health) return;
       var when = health.lastSuccess ? new Date(health.lastSuccess) : null;
       var fresh = when && !isNaN(when.getTime()) ? when : null;
@@ -144,6 +145,24 @@
       if (advanced && secs(windowFor(state.view, state.anchor)[1]) > Date.now() / 1000)
         loadSeries();
     });
+  }
+
+  function nextCheckDelay(now) {
+    var slotMs = BUCKETS.day * 1000;
+    var target = Math.floor(now / slotMs) * slotMs + CHECK_OFFSET_MS;
+    if (target <= now) target += slotMs;
+    return target - now;
+  }
+
+  function scheduleStatusCheck() {
+    setTimeout(function () {
+      var before = lastSuccess ? lastSuccess.getTime() : 0;
+      loadStatus().then(function () {
+        var after = lastSuccess ? lastSuccess.getTime() : 0;
+        if (after <= before) setTimeout(loadStatus, 60000);
+        scheduleStatusCheck();
+      });
+    }, nextCheckDelay(Date.now()));
   }
 
   function renderUpdated() {
@@ -569,7 +588,7 @@
       loadStatus();
       booted = true;
 
-      setInterval(loadStatus, 60000);
+      scheduleStatusCheck();
       setInterval(renderUpdated, 20000);
       setInterval(function () {
         json("/api/coverage").then(function (c) {
