@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>boulderbar.net stats</title>
+<link rel="stylesheet" href="vendor/uPlot.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <header class="head">
+    <h1>boulderbar.net stats</h1>
+  </header>
+
+  <div class="locrow">
+    <div class="locs" id="locs"></div>
+    <span class="updated" id="updated"></span>
+  </div>
+
+  <div class="bar">
+    <div class="pick">
+      <button type="button" id="date-btn" aria-haspopup="dialog" aria-expanded="false">&nbsp;</button>
+      <div class="popup" id="popup" role="dialog" aria-label="pick a date" hidden>
+        <div class="cal-head">
+          <button type="button" id="cal-prev" title="previous month">&lsaquo;</button>
+          <span id="cal-title">&nbsp;</span>
+          <button type="button" id="cal-next" title="next month">&rsaquo;</button>
+        </div>
+        <table class="cal"><tbody id="cal-body"></tbody></table>
+      </div>
+    </div>
+
+    <div class="grp views" id="views">
+      <label><input type="radio" name="view" value="day" checked> day</label>
+      <label><input type="radio" name="view" value="week"> week</label>
+      <label><input type="radio" name="view" value="month"> month</label>
+    </div>
+  </div>
+
+  <div class="chart-box">
+    <div id="chart"></div>
+    <div class="empty" id="empty" hidden>no data in this range</div>
+  </div>
+
+  <footer class="foot">
+    <a href="https://boulderbar.net/standorte/" rel="noreferrer">source</a>
+    <a href="/healthz">status</a>
+  </footer>
+
+</div>
+
+<script src="vendor/uPlot.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

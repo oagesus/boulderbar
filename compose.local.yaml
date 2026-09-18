@@ -1,0 +1,13 @@
+services:
+  boulderbar:
+    build: .
+    image: boulderbar:local
+    container_name: boulderbar-local
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    volumes:
+      - boulderbar-data:/data
+
+volumes:
+  boulderbar-data:

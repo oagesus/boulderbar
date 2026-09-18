@@ -1,0 +1,15 @@
+services:
+  boulderbar:
+    image: oagesus/boulderbar:${TAG:-latest}
+    container_name: boulderbar
+    restart: always
+    user: "1000:1000"
+    networks:
+      - shared
+    volumes:
+      - ./data:/data
+
+networks:
+  shared:
+    external: true
+    name: shared-network
